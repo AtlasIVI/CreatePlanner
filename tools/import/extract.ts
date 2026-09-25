@@ -54,6 +54,7 @@ function readSeed(id: string): ModData {
 
 function readMachineFiles(): MachineFile[] {
   const dir = join(ROOT, 'data', 'machines');
+  if (!existsSync(dir)) return [];
   return readdirSync(dir)
     .filter((f) => f.endsWith('.json'))
     .map((f) => readJson<MachineFile>(join(dir, f)));
