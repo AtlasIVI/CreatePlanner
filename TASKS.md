@@ -2,21 +2,32 @@
 
 Suivi du développement de CreatePlanner (Create 6.x, Minecraft 1.21.1, NeoForge).
 
-## État actuel
+## Planificateur de jauges d'usine
 
-Les fonctionnalités (calculateur, logistique, liste de matériaux, grille, interface) ont été retirées à la demande.
-Restent uniquement les données des objets et l'outil qui les produit :
+- [x] Grille 2D : poser, sélectionner, glisser-déplacer des jauges ; taille réglable
+- [x] Configuration comme en jeu : objet filtré, quantité à garder (objets / piles), posée sur lien de stock (recette)
+      ou empaqueteur (réapprovisionnement), adresse, sortie de recette, délai d'expiration des promesses
+- [x] Connexions entre jauges (entrées avec quantité par requête), flèches sur la grille
+- [x] Liste d'adresses (temps de trajet, temps de fabrication sur place), plaçables sur la grille, joker « * »
+- [x] Simulation au tick : requête toutes les 101 ticks tant que stock + promis < cible, entrées tout-ou-rien,
+      colis de 9 piles max, promesses et expiration, colis sans adresse correspondante non livrés
+- [x] Stock du réseau : initial, apports et consommations par minute
+- [x] Envoi manuel de colis vers une adresse
+- [x] Sauvegarde automatique (navigateur), export / import JSON
 
-- [x] `src/data/seed/` : objets, recettes, tags et noms FR/EN (vraies recettes Create 6 + vanilla)
-- [x] `src/core/types.ts` : format des données (Item, Tag, Recipe, ModData)
-- [x] `npm run import:mods` : lecture des jars (recettes, tags, noms, icônes) + minecraft-data, rapport des types de recettes
-- [x] Squelette Vite + React (page affichant le nombre d'objets et de recettes)
+## Données
 
-Le code supprimé reste récupérable dans l'historique git (commits avant « Remove planner features »).
+- [x] `src/data/seed/` et `npm run import:mods` : objets, noms FR/EN, icônes (quand les jars sont importés)
 
-## Découvertes utiles pour la suite
+## À valider avec l'utilisateur
 
-- Données vanilla : PrismarineJS minecraft-data (1.21.1) + noms officiels FR/EN via le dépôt InventivetalentDev/minecraft-assets.
-- Recettes Create 6 : dossier `recipe` (singulier), résultats `{ id, count, chance }`, fluides NeoForge
-  (`neoforge:single` / `neoforge:tag` avec `amount`), assemblage séquencé avec poids de résultats (`chance` = poids).
-- Modrinth (`api.modrinth.com`) est bloqué par le filtre FortiGuard de ce réseau ; `maven.createmod.net` et GitHub sont accessibles.
+- Représentation : une case = une jauge (en jeu, jusqu'à 4 jauges par face de bloc)
+- Adresses : correspondance insensible à la casse avec « * » — vérifier le comportement exact en jeu
+- Temps de trajet / fabrication par adresse : valeurs saisies, pas calculées depuis les machines
+
+## Découvertes
+
+- Jauge (FactoryPanelBehaviour) : minuteur figé tant que la jauge est satisfaite (stock + promis ≥ cible) ; après
+  l'expiration d'une promesse elle attend encore 100 ticks avant de redemander.
+- Une adresse vide bloque tout envoi (`recipeAddress.isBlank()`).
+- Modrinth est bloqué par le filtre réseau ; `maven.createmod.net` et GitHub sont accessibles.
