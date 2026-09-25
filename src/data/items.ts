@@ -65,6 +65,53 @@ export const dataOrigin: 'generated' | 'seed' = generated.length ? 'generated' :
 export const catalog = buildCatalog(generated.length ? generated : seedMods);
 export const catalogList = [...catalog.values()].sort((a, b) => a.fr.localeCompare(b.fr, 'fr'));
 
+/** Single-item processing recipes (washing, haunting, crushing...), usable as address treatments. */
+export interface TreatmentRecipe {
+  id: string;
+  type: string;
+  input: Id;
+  outputs: { item: Id; count: number; chance: number }[];
+}
+
+const TREATMENT_TYPES: Record<string, string> = {
+  'create:splashing': 'Lavage (ventilateur + eau)',
+  'create:haunting': 'Hantise (ventilateur + feu des âmes)',
+  'minecraft:smelting': 'Cuisson (four / ventilateur + lave)',
+  'minecraft:blasting': 'Haut fourneau',
+  'minecraft:smoking': 'Fumage',
+  'create:crushing': 'Roues de broyage',
+  'create:milling': 'Meule',
+  'create:pressing': 'Presse',
+  'create:cutting': 'Scie',
+};
+
+export function treatmentTypeName(type: string): string {
+  return TREATMENT_TYPES[type] ?? type;
+}
+
+function resolveTag(tags: TagMap, tag: Id, seen = new Set<Id>()): Id[] {
+  if (seen.has(tag)) return [];
+  seen.add(tag);
+  return (tags[tag] ?? []).flatMap((m) => (m.startsWith('#') ? resolveTag(tags, m.slice(1), seen) : [m]));
+}
+
+function buildTreatments(mods: ModData[]): TreatmentRecipe[] {
+  const tags: TagMap = {};
+  for (const m of mods) for (const [k, v] of Object.entries(m.tags)) tags[k] = [...(tags[k] ?? []), ...v];
+  const out: TreatmentRecipe[] = [];
+  for (const m of mods)
+    for (const r of m.recipes) {
+      if (!(r.type in TREATMENT_TYPES) || r.inputs.length !== 1 || r.inputs[0].kind !== 'item' || r.inputs[0].amount !== 1) continue;
+      const ing = r.inputs[0];
+      const inputs = ing.id ? [ing.id, ...(ing.alternatives ?? [])] : ing.tag ? resolveTag(tags, ing.tag) : [];
+      const outputs = r.outputs.filter((o) => o.kind === 'item').map((o) => ({ item: o.id, count: o.amount, chance: o.chance }));
+      for (const input of inputs) out.push({ id: `${r.id}@${input}`, type: r.type, input, outputs });
+    }
+  return out;
+}
+
+export const treatmentRecipes = buildTreatments(generated.length ? generated : seedMods);
+
 export function itemName(id: Id | null | undefined, lang: 'fr' | 'en' = 'fr'): string {
   if (!id) return '—';
   const c = catalog.get(id);

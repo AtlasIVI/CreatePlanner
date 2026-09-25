@@ -599,3 +599,35 @@ td.num {
   gap: 6px;
   margin-bottom: 8px;
 }
+
+.treatment {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 6px;
+  margin-bottom: 6px;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.out-row {
+  font-size: 12px;
+}
+
+.add-treatment {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+button.small {
+  font-size: 12px;
+  padding: 2px 6px;
+}

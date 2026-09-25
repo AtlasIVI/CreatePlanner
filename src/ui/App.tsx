@@ -11,14 +11,17 @@ import {
   sendManual,
   stepSim,
   targetAmount,
+  expectedOutput,
   type Board,
+  type ChanceOutput,
   type Destination,
   type Gauge,
   type GaugeStatus,
   type SimState,
+  type Treatment,
 } from '../core/gauges';
 import type { Id } from '../core/types';
-import { dataOrigin, itemName, stackSize } from '../data/items';
+import { dataOrigin, itemName, stackSize, treatmentRecipes, treatmentTypeName } from '../data/items';
 import { fmt, fmtTime, ItemIcon, ItemPicker, Num } from './common';
 
 const STORAGE_KEY = 'createplanner:gauges';
@@ -527,6 +530,7 @@ function GaugeEditor({
         <label className="field">
           <span>Sortie de recette (objets promis par requête)</span>
           <Num value={g.recipeOutput} min={1} max={9999} onChange={(recipeOutput) => patch({ recipeOutput })} />
+          <ExpectedHint g={g} board={board} dest={dest} patch={patch} />
         </label>
       )}
       {g.mode !== 'farm' && (
@@ -617,6 +621,33 @@ function GaugeEditor({
   );
 }
 
+function ExpectedHint({ g, board, dest, patch }: { g: Gauge; board: Board; dest?: Destination; patch: (v: Partial<Gauge>) => void }) {
+  if (!dest || dest.treatments.length === 0 || !g.item) return null;
+  const byId = new Map(board.gauges.map((x) => [x.id, x]));
+  const inputs = g.inputs.flatMap((i) => {
+    const it = byId.get(i.from)?.item;
+    return it ? [{ item: it, count: i.amount }] : [];
+  });
+  const expected = expectedOutput(dest, inputs, g.item);
+  const others = dest.treatments
+    .filter((t) => inputs.some((i) => i.item === t.input))
+    .flatMap((t) => t.outputs)
+    .filter((o) => o.item !== g.item)
+    .map((o) => itemName(o.item));
+  return (
+    <span className={`small ${Math.abs(expected - g.recipeOutput) > 1e-9 ? 'warn' : 'muted'}`}>
+      À « {dest.address} », une requête donne en moyenne {fmt(expected)} {itemName(g.item)}
+      {others.length > 0 && <> (+ {[...new Set(others)].join(', ')})</>}.{' '}
+      {expected >= 1 && Math.round(expected) !== g.recipeOutput && (
+        <button className="ghost small" onClick={() => patch({ recipeOutput: Math.max(1, Math.round(expected)) })}>
+          Promettre {Math.max(1, Math.round(expected))}
+        </button>
+      )}
+      {expected > 0 && expected < 1 && <> Augmentez les entrées pour obtenir au moins 1 en moyenne.</>}
+    </span>
+  );
+}
+
 function DestEditor({ d, board, patch, place, remove }: { d: Destination; board: Board; patch: (v: Partial<Destination>) => void; place: () => void; remove: () => void }) {
   const users = board.gauges.filter((g) => g.address && findDestination(board, g.address)?.id === d.id);
   return (
@@ -644,10 +675,86 @@ function DestEditor({ d, board, patch, place, remove }: { d: Destination; board:
         )}
       </div>
       <p className="small muted">Jauges qui envoient ici : {users.map((g) => g.label).join(', ') || 'aucune'}</p>
+      <TreatmentsEditor d={d} patch={patch} />
       <button className="ghost danger" onClick={remove}>
         Supprimer l'adresse
       </button>
     </section>
+  );
+}
+
+function TreatmentsEditor({ d, patch }: { d: Destination; patch: (v: Partial<Destination>) => void }) {
+  const [input, setInput] = useState<Id | null>(null);
+  const setTreatments = (treatments: Treatment[]) => patch({ treatments });
+  const setOutput = (ti: number, oi: number, v: Partial<ChanceOutput>) =>
+    setTreatments(d.treatments.map((t, i) => (i === ti ? { ...t, outputs: t.outputs.map((o, j) => (j === oi ? { ...o, ...v } : o)) } : t)));
+  const matching = input ? treatmentRecipes.filter((r) => r.input === input) : [];
+  const add = (t: Treatment) => setTreatments([...d.treatments.filter((x) => x.input !== t.input), t]);
+  return (
+    <div className="field treatments">
+      <span>Traitements à cette adresse (ce que la machine rend pour chaque objet reçu)</span>
+      {d.treatments.length === 0 && (
+        <span className="muted small">Aucun : une requête de recette rend la « sortie de recette » promise par la jauge.</span>
+      )}
+      {d.treatments.map((t, ti) => (
+        <div key={t.input} className="treatment">
+          <div className="row">
+            <ItemIcon id={t.input} size={18} />
+            <strong className="grow">1 × {itemName(t.input)} →</strong>
+            <button className="ghost" onClick={() => setTreatments(d.treatments.filter((_, i) => i !== ti))} aria-label="Retirer le traitement">
+              ×
+            </button>
+          </div>
+          {t.outputs.map((o, oi) => (
+            <div key={oi} className="row out-row">
+              <div className="grow">
+                <ItemPicker value={o.item} onChange={(item) => setOutput(ti, oi, { item })} />
+              </div>
+              <Num value={o.count} min={1} max={64} width={46} label="Nombre" onChange={(count) => setOutput(ti, oi, { count })} />
+              <span>×</span>
+              <Num
+                value={Math.round(o.chance * 1000) / 10}
+                min={0}
+                max={100}
+                step={0.5}
+                width={58}
+                label="Chance en %"
+                onChange={(p) => setOutput(ti, oi, { chance: p / 100 })}
+              />
+              <span>%</span>
+              <button
+                className="ghost"
+                aria-label="Retirer la sortie"
+                onClick={() => setTreatments(d.treatments.map((x, i) => (i === ti ? { ...x, outputs: x.outputs.filter((_, j) => j !== oi) } : x)))}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          <button
+            className="ghost small"
+            onClick={() => setTreatments(d.treatments.map((x, i) => (i === ti ? { ...x, outputs: [...x.outputs, { item: t.input, count: 1, chance: 1 }] } : x)))}
+          >
+            + sortie
+          </button>
+        </div>
+      ))}
+      <div className="add-treatment">
+        <ItemPicker value={input} onChange={setInput} placeholder="Objet reçu (ex. gravier)…" />
+        {input && (
+          <div className="col">
+            {matching.map((r) => (
+              <button key={r.id} className="ghost wide small" onClick={() => add({ input: r.input, outputs: r.outputs.map((o) => ({ ...o })) })}>
+                {treatmentTypeName(r.type)} : {r.outputs.map((o) => `${o.count > 1 ? `${o.count} ` : ''}${itemName(o.item)} ${fmt(o.chance * 100)} %`).join(', ')}
+              </button>
+            ))}
+            <button className="ghost wide small" onClick={() => add({ input, outputs: [{ item: input, count: 1, chance: 1 }] })}>
+              Saisir à la main…
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -761,6 +868,13 @@ function SimPanel({
                 ×{s}
               </option>
             ))}
+          </select>
+        </label>
+        <label className="small">
+          Chances
+          <select value={board.chanceMode} onChange={(e) => setBoard((b) => ({ ...b, chanceMode: e.target.value as Board['chanceMode'] }))}>
+            <option value="average">en moyenne</option>
+            <option value="random">tirage aléatoire</option>
           </select>
         </label>
         <button className="ghost" onClick={reset} title="Revenir au stock initial">

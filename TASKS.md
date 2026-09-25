@@ -13,6 +13,9 @@ Suivi du développement de CreatePlanner (Create 6.x, Minecraft 1.21.1, NeoForge
       colis de 9 piles max, promesses et expiration, colis sans adresse correspondante non livrés
 - [x] Jauge alimentée par une ferme (ex. pierre 1300/min) : ne commande rien, surveille le stock ; option « la ferme
       s'arrête à la cible »
+- [x] Traitements par adresse avec sorties en pourcentage (ex. « fan:wash » : gravier → silex 25 %, pépite de fer 12,5 %),
+      chargeables depuis les recettes Create ; simulation en moyenne ou en tirage aléatoire ; les sous-produits
+      retournent au réseau ; la jauge indique ce qu'une requête rapporte en moyenne
 - [x] Stock du réseau : initial, apports et consommations par minute
 - [x] Envoi manuel de colis vers une adresse
 - [x] Sauvegarde automatique (navigateur), export / import JSON

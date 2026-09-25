@@ -2019,5 +2019,103 @@
       }
     ],
     "cells": 9
+  },
+  {
+    "id": "create:splashing/gravel",
+    "type": "create:splashing",
+    "mod": "create",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:gravel",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:flint",
+        "amount": 1,
+        "chance": 0.25
+      },
+      {
+        "kind": "item",
+        "id": "minecraft:iron_nugget",
+        "amount": 1,
+        "chance": 0.125
+      }
+    ]
+  },
+  {
+    "id": "create:splashing/soul_sand",
+    "type": "create:splashing",
+    "mod": "create",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:soul_sand",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:quartz",
+        "amount": 4,
+        "chance": 0.125
+      },
+      {
+        "kind": "item",
+        "id": "minecraft:gold_nugget",
+        "amount": 1,
+        "chance": 0.02
+      }
+    ]
+  },
+  {
+    "id": "create:splashing/red_sand",
+    "type": "create:splashing",
+    "mod": "create",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:red_sand",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:gold_nugget",
+        "amount": 3,
+        "chance": 0.125
+      },
+      {
+        "kind": "item",
+        "id": "minecraft:dead_bush",
+        "amount": 1,
+        "chance": 0.05
+      }
+    ]
+  },
+  {
+    "id": "create:splashing/sand",
+    "type": "create:splashing",
+    "mod": "create",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:sand",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:clay_ball",
+        "amount": 1,
+        "chance": 0.25
+      }
+    ]
   }
 ]

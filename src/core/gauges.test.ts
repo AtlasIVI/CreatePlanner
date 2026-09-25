@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
   emptyBoard,
+  expectedOutput,
   gaugeStatus,
   initSim,
   matchAddress,
   newDestination,
   newGauge,
   packStacks,
+  processAt,
   promiseTimeoutTicks,
   sendManual,
   stepSim,
@@ -144,6 +146,73 @@ describe('farm gauge', () => {
     stepSim(b, sim, 20 * 60);
     expect(sim.stock['minecraft:cobblestone']).toBeLessThan(102);
     expect(sim.stock['minecraft:cobblestone']).toBeGreaterThanOrEqual(100);
+  });
+});
+
+describe('address treatments with chance outputs (washing gravel at fan:wash)', () => {
+  const washBoard = (): Board => {
+    const b = emptyBoard();
+    b.stock = { 'minecraft:gravel': 1000 };
+    b.destinations = [
+      {
+        ...newDestination('fan:wash'),
+        travelSec: 1,
+        processSec: 1,
+        treatments: [
+          {
+            input: 'minecraft:gravel',
+            outputs: [
+              { item: 'minecraft:flint', count: 1, chance: 0.25 },
+              { item: 'minecraft:iron_nugget', count: 1, chance: 0.125 },
+            ],
+          },
+        ],
+      },
+    ];
+    b.gauges = [
+      { ...newGauge(0, 0, 1), id: 'gravel', item: 'minecraft:gravel' },
+      { ...newGauge(1, 0, 2), id: 'nugget', item: 'minecraft:iron_nugget', amount: 1, address: 'fan:wash', inputs: [{ from: 'gravel', amount: 8 }] },
+    ];
+    return b;
+  };
+
+  it('on average, 8 gravel give 1 nugget and 2 flint', () => {
+    const b = washBoard();
+    expect(processAt(b.destinations[0], [{ item: 'minecraft:gravel', count: 8 }], 'average')).toEqual([
+      { item: 'minecraft:flint', count: 2 },
+      { item: 'minecraft:iron_nugget', count: 1 },
+    ]);
+    expect(expectedOutput(b.destinations[0], [{ item: 'minecraft:gravel', count: 8 }], 'minecraft:iron_nugget')).toBe(1);
+  });
+
+  it('the address output replaces the promise: flint is a byproduct in the network', () => {
+    const b = washBoard();
+    const sim = initSim(b);
+    stepSim(b, sim, 100);
+    expect(sim.stock['minecraft:gravel']).toBe(992);
+    expect(sim.stock['minecraft:iron_nugget']).toBe(1);
+    expect(sim.stock['minecraft:flint']).toBe(2);
+    expect(sim.promises).toHaveLength(0);
+  });
+
+  it('random mode rolls every item (reproducible) and averages out', () => {
+    const b = washBoard();
+    b.chanceMode = 'random';
+    const sim = initSim(b);
+    const out = processAt(b.destinations[0], [{ item: 'minecraft:gravel', count: 8000 }], 'random', sim);
+    const nuggets = out.find((s) => s.item === 'minecraft:iron_nugget')!.count;
+    expect(Number.isInteger(nuggets)).toBe(true);
+    expect(nuggets).toBeGreaterThan(900);
+    expect(nuggets).toBeLessThan(1100);
+  });
+
+  it('manual packages are processed too; untreated items come back unchanged', () => {
+    const b = washBoard();
+    b.stock['minecraft:dirt'] = 5;
+    const sim = initSim(b);
+    sendManual(b, sim, 'fan:wash', [{ item: 'minecraft:dirt', count: 5 }]);
+    stepSim(b, sim, 70);
+    expect(sim.stock['minecraft:dirt']).toBe(5);
   });
 });
 

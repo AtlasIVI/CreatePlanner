@@ -56,6 +56,10 @@
     "kind": "item"
   },
   {
+    "id": "minecraft:dead_bush",
+    "kind": "item"
+  },
+  {
     "id": "minecraft:deepslate_copper_ore",
     "kind": "item"
   },
@@ -205,6 +209,10 @@
   },
   {
     "id": "minecraft:smoker",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:soul_sand",
     "kind": "item"
   },
   {

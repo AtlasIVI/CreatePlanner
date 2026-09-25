@@ -57,12 +57,30 @@ export interface Destination {
   travelSec: number;
   /** Seconds the machine there needs to turn one request into its output (0 = plain storage). */
   processSec: number;
+  /** What the machine at this address turns each incoming item into (e.g. washing gravel). */
+  treatments: Treatment[];
   /** Optional position on the grid. */
   x: number | null;
   y: number | null;
 }
 
+export interface ChanceOutput {
+  item: Id;
+  count: number;
+  /** 0..1 */
+  chance: number;
+}
+
+export interface Treatment {
+  input: Id;
+  outputs: ChanceOutput[];
+}
+
+/** average: expected amounts (fractions accumulate); random: every item is rolled like in game. */
+export type ChanceMode = 'average' | 'random';
+
 export interface Board {
+  chanceMode: ChanceMode;
   version: 1;
   name: string;
   width: number;
@@ -78,7 +96,7 @@ export interface Board {
 }
 
 export function emptyBoard(): Board {
-  return { version: 1, name: 'Mon usine', width: 14, height: 9, gauges: [], destinations: [], stock: {}, supply: {}, demand: {} };
+  return { version: 1, chanceMode: 'average', name: 'Mon usine', width: 14, height: 9, gauges: [], destinations: [], stock: {}, supply: {}, demand: {} };
 }
 
 export function newId(prefix: string): string {
@@ -107,7 +125,7 @@ export function newGauge(x: number, y: number, n: number): Gauge {
 }
 
 export function newDestination(address: string): Destination {
-  return { id: newId('a'), address, travelSec: 5, processSec: 5, x: null, y: null };
+  return { id: newId('a'), address, travelSec: 5, processSec: 5, treatments: [], x: null, y: null };
 }
 
 export function promiseTimeoutTicks(v: number): number {
@@ -159,8 +177,10 @@ export interface Package {
   /** Tick at which the current status ends. */
   until: number;
   status: PackageStatus;
-  /** Items returned to the network once processed (recipe requests). */
+  /** Items the gauge promised for this request (used when the address has no treatment). */
   output?: Stack;
+  /** Items returned to the network once processed. */
+  result?: Stack[];
 }
 
 export interface PromiseEntry {
@@ -189,6 +209,8 @@ export interface SimState {
   log: LogEntry[];
   unmet: Record<Id, number>;
   nextId: number;
+  /** State of the random generator (random chance mode), so runs are reproducible. */
+  seed: number;
   /** Last reason each gauge did not send (to avoid repeating the log line). */
   blocked: Record<string, string>;
 }
@@ -204,6 +226,7 @@ export function initSim(board: Board): SimState {
     log: [],
     unmet: {},
     nextId: 1,
+    seed: 12345,
     blocked: {},
   };
 }
@@ -286,6 +309,42 @@ function ship(
   return request;
 }
 
+function random(sim: SimState): number {
+  // mulberry32
+  let t = (sim.seed = (sim.seed + 0x6d2b79f5) | 0);
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
+const fmtCount = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/\.?0+$/, ''));
+
+/** What an address gives back for some items. Items without a treatment come back unchanged. */
+export function processAt(dest: Destination, contents: Stack[], mode: ChanceMode, sim?: SimState): Stack[] {
+  const out = new Map<Id, number>();
+  const add = (item: Id, n: number) => out.set(item, (out.get(item) ?? 0) + n);
+  for (const s of contents) {
+    const t = dest.treatments.find((x) => x.input === s.item);
+    if (!t) {
+      add(s.item, s.count);
+      continue;
+    }
+    for (const o of t.outputs) {
+      if (mode === 'random' && sim) {
+        let n = 0;
+        for (let i = 0; i < s.count; i++) if (random(sim) < o.chance) n += o.count;
+        add(o.item, n);
+      } else add(o.item, s.count * o.count * o.chance);
+    }
+  }
+  return [...out].map(([item, count]) => ({ item, count }));
+}
+
+/** Expected amount of `item` produced at an address from some inputs. */
+export function expectedOutput(dest: Destination, inputs: Stack[], item: Id): number {
+  return processAt(dest, inputs, 'average').find((s) => s.item === item)?.count ?? 0;
+}
+
 /** Send a package by hand from the network stock. Returns an error message or null. */
 export function sendManual(board: Board, sim: SimState, address: string, items: Stack[], stackSize: (id: Id) => number = () => DEFAULT_STACK): string | null {
   if (!address.trim()) return 'Adresse vide';
@@ -336,25 +395,37 @@ export function stepSim(board: Board, sim: SimState, ticks = 1, stackSize: (id: 
           p.status = 'delivered';
           if (p.last) sim.promises = sim.promises.filter((pr) => pr.request !== p.request);
           log(sim, `Colis #${p.id} livré à « ${dest.address} » (réappro. ${g.label})`, g.id);
-        } else if (p.kind === 'recipe' && p.last) {
+        } else if (dest.treatments.length > 0 || (p.kind === 'recipe' && p.last)) {
           p.status = 'processing';
           p.until = sim.tick + Math.round(dest.processSec * TICKS_PER_SECOND);
-          log(sim, `Colis #${p.id} arrivé à « ${dest.address} », fabrication en cours`, p.gauge ?? undefined);
+          log(sim, `Colis #${p.id} arrivé à « ${dest.address} », traitement en cours`, p.gauge ?? undefined);
         } else {
           p.status = 'delivered';
           if (p.kind === 'manual') log(sim, `Colis #${p.id} livré à « ${dest.address} »`);
         }
       } else if (p.status === 'processing') {
+        // With treatments, the address decides what comes out (chance outputs); otherwise the gauge's promise does.
+        p.result = dest && dest.treatments.length > 0 ? processAt(dest, p.contents, board.chanceMode, sim) : p.output ? [p.output] : [];
         p.status = 'returning';
         p.until = sim.tick + Math.round((dest?.travelSec ?? 0) * TICKS_PER_SECOND);
       } else if (p.status === 'returning') {
         p.status = 'delivered';
-        if (p.output) {
-          sim.stock[p.output.item] = (sim.stock[p.output.item] ?? 0) + p.output.count;
+        for (const r of p.result ?? []) sim.stock[r.item] = (sim.stock[r.item] ?? 0) + r.count;
+        const got = (p.result ?? []).filter((r) => r.count > 0);
+        let note = '';
+        if (p.kind === 'recipe' && p.last) {
           const before = sim.promises.length;
+          const promise = sim.promises.find((pr) => pr.request === p.request);
           sim.promises = sim.promises.filter((pr) => pr.request !== p.request);
-          log(sim, `+${p.output.count} ${p.output.item} ajoutés au réseau${before === sim.promises.length ? ' (promesse déjà expirée)' : ''}`, p.gauge ?? undefined);
+          if (before === sim.promises.length) note = ' (promesse déjà expirée)';
+          else if (promise) note = ` (promis ${promise.count})`;
         }
+        log(
+          sim,
+          got.length ? `${got.map((r) => `+${fmtCount(r.count)} ${r.item}`).join(', ')} ajoutés au réseau${note}` : `Colis #${p.id} traité : rien obtenu${note}`,
+          p.gauge ?? undefined,
+          got.length ? 'info' : 'warn',
+        );
       }
     }
     // Gauges
@@ -441,6 +512,7 @@ export function normalizeBoard(raw: unknown): Board {
     ...base,
     ...b,
     version: 1,
+    chanceMode: b.chanceMode === 'random' ? 'random' : 'average',
     gauges: b.gauges.map((g) => ({ ...newGauge(0, 0, 0), ...g })),
     destinations: Array.isArray(b.destinations) ? b.destinations.map((d) => ({ ...newDestination(''), ...d })) : [],
     stock: b.stock ?? {},
