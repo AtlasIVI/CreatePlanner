@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { itemName, namespaceOf } from '../core/registry';
 import type { Id, Names, Sourced } from '../core/types';
 import { useApp } from './context';
@@ -77,30 +77,48 @@ export function ItemPicker({
       .filter((i) => i.name.toLowerCase().includes(s) || i.other.toLowerCase().includes(s) || i.id.includes(s))
       .slice(0, 60);
   }, [all, q]);
+  const input = useRef<HTMLInputElement>(null);
+  const openList = () => {
+    if (!open) {
+      setQ('');
+      setOpen(true);
+    }
+  };
+  const choose = (id: Id) => {
+    onChange(id);
+    setOpen(false);
+    input.current?.blur();
+  };
   return (
     <div className="picker">
       <input
+        ref={input}
         value={open ? q : value ? itemName(ds, value, lang) : ''}
         placeholder={placeholder}
-        onFocus={() => {
+        onFocus={openList}
+        onClick={openList}
+        onBlur={() => setOpen(false)}
+        onChange={(e) => {
           setOpen(true);
-          setQ('');
+          setQ(e.target.value);
         }}
-        onBlur={() => setTimeout(() => setOpen(false), 150)}
-        onChange={(e) => setQ(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && matches[0]) choose(matches[0].id);
+          if (e.key === 'Escape') input.current?.blur();
+        }}
         aria-label={placeholder}
       />
       {open && (
-        <ul className="picker-list" role="listbox">
+        <ul className="picker-list" role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {matches.map((m) => (
             <li
               key={m.id}
               role="option"
               aria-selected={m.id === value}
+              // mousedown (not click) so the choice lands before the input blurs
               onMouseDown={(e) => {
                 e.preventDefault();
-                onChange(m.id);
-                setOpen(false);
+                choose(m.id);
               }}
             >
               <ItemIcon id={m.id} />

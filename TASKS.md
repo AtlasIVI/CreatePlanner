@@ -22,10 +22,12 @@ Suivi du développement de CreatePlanner (Create 6.x, Minecraft 1.21.1, NeoForge
 
 ## Phase 2 — Logistique
 
-- [ ] Modules jauge d'usine (sortie, entrées, stock cible, adresse, délai de promesse)
-- [ ] Empaqueteurs, ports grenouille, convoyeurs à chaîne, liens de stock
-- [ ] Débit par lien et détection de goulot
-- [ ] Bilan de stock dans le temps (accumulation / pénurie)
+- [x] Modules jauge d'usine (sortie par requête, entrées, stock cible, adresse, délai de promesse, mode recette / réappro.)
+- [x] Empaqueteurs (colis de 9 piles, cycle 20 t), ports grenouille, convoyeurs à chaîne, tapis, liens directs
+- [x] Débit par lien et détection de goulot (jauge, machines, empaqueteur, transport, entrées, stock cible)
+- [x] Bilan de stock dans le temps (simulation par seconde : pénurie / accumulation / équilibré)
+- [x] Génération des modules depuis le plan de production (lots dimensionnés pour l'intervalle de 5,05 s)
+- [x] Délai de promesse simulé : une promesse expirée ne compte plus dans le stock cible, la jauge recommande
 
 ## Phase 3 — Liste de matériaux
 
@@ -79,6 +81,10 @@ Valeurs vérifiées dans `Creators-of-Create/Create` branche `mc1.21.1/dev` (jui
 - Établi / tailleur de pierre à la main : 1 opération/s supposée.
 - Tapis : 1 objet « Tapis roulant » pour 2 blocs.
 - Espacement des colis sur une chaîne, espacement des objets sur un tapis, cycle du port grenouille, délai de promesse max (30 min).
+
+### Corrections
+
+- Sélecteur d'objets : après un choix, le champ gardait le focus avec la liste fermée (saisie invisible) — corrigé.
 
 ### Réseau / environnement
 
