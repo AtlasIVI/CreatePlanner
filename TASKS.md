@@ -4,14 +4,14 @@ Suivi du développement de CreatePlanner (Create 6.x, Minecraft 1.21.1, NeoForge
 
 ## État actuel
 
-À la demande, l'application est réduite à une grille 2D vide (taille réglable, mémorisée dans le navigateur).
+Une grille 2D vide (taille réglable, mémorisée dans le navigateur) et, à côté, la bibliothèque des blocs vanilla.
 Les fonctionnalités précédentes (jauges, écran façon jeu, adresses, simulation) sont retirées ; elles restent
 récupérables dans l'historique git.
 
 ## Bibliothèque de blocs vanilla
 
-- [x]  : liste des blocs 1.21.1 (minecraft-data), modèles (archive JSON misode/mcmeta, 15 Mo),
-      textures (misode/mcmeta), noms FR/EN officiels →  (non versionné, textures Mojang)
+- [x] `npm run import:blocks` : liste des blocs 1.21.1 (minecraft-data), modèles (archive JSON misode/mcmeta, 15 Mo),
+      textures (misode/mcmeta), noms FR/EN officiels → `data/generated/blocks/` (non versionné, textures Mojang)
 - [x] Icônes façon inventaire : cube 3D en CSS (dessus, face nord à gauche, face ouest à droite, ombrage des côtés),
       calques teintés (herbe, feuillages) ; icône plate pour les autres formes
 - [x] Panneau « Blocs Minecraft » à côté de la grille, avec recherche FR/EN/id
