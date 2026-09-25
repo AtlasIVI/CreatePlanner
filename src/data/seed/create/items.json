@@ -1,0 +1,282 @@
+[
+  {
+    "id": "create:andesite_alloy",
+    "kind": "item"
+  },
+  {
+    "id": "create:andesite_casing",
+    "kind": "item"
+  },
+  {
+    "id": "create:basin",
+    "kind": "item"
+  },
+  {
+    "id": "create:belt",
+    "kind": "item"
+  },
+  {
+    "id": "create:belt_connector",
+    "kind": "item"
+  },
+  {
+    "id": "create:blaze_burner",
+    "kind": "item"
+  },
+  {
+    "id": "create:brass_casing",
+    "kind": "item"
+  },
+  {
+    "id": "create:brass_hand",
+    "kind": "item"
+  },
+  {
+    "id": "create:brass_ingot",
+    "kind": "item"
+  },
+  {
+    "id": "create:brass_nugget",
+    "kind": "item"
+  },
+  {
+    "id": "create:brass_sheet",
+    "kind": "item"
+  },
+  {
+    "id": "create:cardboard",
+    "kind": "item"
+  },
+  {
+    "id": "create:cardboard_block",
+    "kind": "item"
+  },
+  {
+    "id": "create:chain_conveyor",
+    "kind": "item"
+  },
+  {
+    "id": "create:chocolate",
+    "kind": "fluid"
+  },
+  {
+    "id": "create:cogwheel",
+    "kind": "item"
+  },
+  {
+    "id": "create:copper_casing",
+    "kind": "item"
+  },
+  {
+    "id": "create:copper_nugget",
+    "kind": "item"
+  },
+  {
+    "id": "create:copper_sheet",
+    "kind": "item"
+  },
+  {
+    "id": "create:creative_motor",
+    "kind": "item"
+  },
+  {
+    "id": "create:crushed_raw_copper",
+    "kind": "item"
+  },
+  {
+    "id": "create:crushed_raw_gold",
+    "kind": "item"
+  },
+  {
+    "id": "create:crushed_raw_iron",
+    "kind": "item"
+  },
+  {
+    "id": "create:crushed_raw_zinc",
+    "kind": "item"
+  },
+  {
+    "id": "create:crushing_wheel",
+    "kind": "item"
+  },
+  {
+    "id": "create:deployer",
+    "kind": "item"
+  },
+  {
+    "id": "create:depot",
+    "kind": "item"
+  },
+  {
+    "id": "create:electron_tube",
+    "kind": "item"
+  },
+  {
+    "id": "create:empty_blaze_burner",
+    "kind": "item"
+  },
+  {
+    "id": "create:encased_fan",
+    "kind": "item"
+  },
+  {
+    "id": "create:experience_nugget",
+    "kind": "item"
+  },
+  {
+    "id": "create:factory_gauge",
+    "kind": "item"
+  },
+  {
+    "id": "create:fluid_tank",
+    "kind": "item"
+  },
+  {
+    "id": "create:gearbox",
+    "kind": "item"
+  },
+  {
+    "id": "create:golden_sheet",
+    "kind": "item"
+  },
+  {
+    "id": "create:hand_crank",
+    "kind": "item"
+  },
+  {
+    "id": "create:incomplete_precision_mechanism",
+    "kind": "item"
+  },
+  {
+    "id": "create:iron_sheet",
+    "kind": "item"
+  },
+  {
+    "id": "create:item_drain",
+    "kind": "item"
+  },
+  {
+    "id": "create:item_vault",
+    "kind": "item"
+  },
+  {
+    "id": "create:large_cogwheel",
+    "kind": "item"
+  },
+  {
+    "id": "create:large_water_wheel",
+    "kind": "item"
+  },
+  {
+    "id": "create:mechanical_arm",
+    "kind": "item"
+  },
+  {
+    "id": "create:mechanical_crafter",
+    "kind": "item"
+  },
+  {
+    "id": "create:mechanical_mixer",
+    "kind": "item"
+  },
+  {
+    "id": "create:mechanical_press",
+    "kind": "item"
+  },
+  {
+    "id": "create:mechanical_saw",
+    "kind": "item"
+  },
+  {
+    "id": "create:millstone",
+    "kind": "item"
+  },
+  {
+    "id": "create:package_frogport",
+    "kind": "item"
+  },
+  {
+    "id": "create:packager",
+    "kind": "item"
+  },
+  {
+    "id": "create:polished_rose_quartz",
+    "kind": "item"
+  },
+  {
+    "id": "create:precision_mechanism",
+    "kind": "item"
+  },
+  {
+    "id": "create:propeller",
+    "kind": "item"
+  },
+  {
+    "id": "create:pulp",
+    "kind": "item"
+  },
+  {
+    "id": "create:raw_zinc",
+    "kind": "item"
+  },
+  {
+    "id": "create:rose_quartz",
+    "kind": "item"
+  },
+  {
+    "id": "create:shaft",
+    "kind": "item"
+  },
+  {
+    "id": "create:spout",
+    "kind": "item"
+  },
+  {
+    "id": "create:steam_engine",
+    "kind": "item"
+  },
+  {
+    "id": "create:stock_link",
+    "kind": "item"
+  },
+  {
+    "id": "create:stock_ticker",
+    "kind": "item"
+  },
+  {
+    "id": "create:transmitter",
+    "kind": "item"
+  },
+  {
+    "id": "create:water_wheel",
+    "kind": "item"
+  },
+  {
+    "id": "create:wheat_flour",
+    "kind": "item"
+  },
+  {
+    "id": "create:whisk",
+    "kind": "item"
+  },
+  {
+    "id": "create:white_sail",
+    "kind": "item"
+  },
+  {
+    "id": "create:windmill_bearing",
+    "kind": "item"
+  },
+  {
+    "id": "create:zinc_ingot",
+    "kind": "item"
+  },
+  {
+    "id": "create:zinc_nugget",
+    "kind": "item"
+  },
+  {
+    "id": "create:zinc_ore",
+    "kind": "item"
+  }
+]

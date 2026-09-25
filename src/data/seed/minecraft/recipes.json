@@ -1,0 +1,579 @@
+[
+  {
+    "id": "minecraft:iron_nugget",
+    "type": "minecraft:crafting_shapeless",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_ingot",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_nugget",
+        "amount": 9,
+        "chance": 1
+      }
+    ],
+    "cells": 1
+  },
+  {
+    "id": "minecraft:iron_ingot_from_nuggets",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_nugget",
+        "amount": 9
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_ingot",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "cells": 9
+  },
+  {
+    "id": "minecraft:iron_block",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_ingot",
+        "amount": 9
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_block",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "cells": 9
+  },
+  {
+    "id": "minecraft:iron_ingot_from_iron_block",
+    "type": "minecraft:crafting_shapeless",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_block",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_ingot",
+        "amount": 9,
+        "chance": 1
+      }
+    ],
+    "cells": 1
+  },
+  {
+    "id": "minecraft:gold_nugget",
+    "type": "minecraft:crafting_shapeless",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:gold_ingot",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:gold_nugget",
+        "amount": 9,
+        "chance": 1
+      }
+    ],
+    "cells": 1
+  },
+  {
+    "id": "minecraft:gold_ingot_from_nuggets",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:gold_nugget",
+        "amount": 9
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:gold_ingot",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "cells": 9
+  },
+  {
+    "id": "minecraft:copper_block",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:copper_ingot",
+        "amount": 9
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:copper_block",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "cells": 9
+  },
+  {
+    "id": "minecraft:copper_ingot",
+    "type": "minecraft:crafting_shapeless",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:copper_block",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:copper_ingot",
+        "amount": 9,
+        "chance": 1
+      }
+    ],
+    "cells": 1
+  },
+  {
+    "id": "minecraft:iron_ingot_from_smelting_raw_iron",
+    "type": "minecraft:smelting",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:raw_iron",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_ingot",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "duration": 200
+  },
+  {
+    "id": "minecraft:iron_ingot_from_blasting_raw_iron",
+    "type": "minecraft:blasting",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:raw_iron",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_ingot",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "duration": 100
+  },
+  {
+    "id": "minecraft:copper_ingot_from_smelting_raw_copper",
+    "type": "minecraft:smelting",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:raw_copper",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:copper_ingot",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "duration": 200
+  },
+  {
+    "id": "minecraft:copper_ingot_from_blasting_raw_copper",
+    "type": "minecraft:blasting",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:raw_copper",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:copper_ingot",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "duration": 100
+  },
+  {
+    "id": "minecraft:gold_ingot_from_smelting_raw_gold",
+    "type": "minecraft:smelting",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:raw_gold",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:gold_ingot",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "duration": 200
+  },
+  {
+    "id": "minecraft:gold_ingot_from_blasting_raw_gold",
+    "type": "minecraft:blasting",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:raw_gold",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:gold_ingot",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "duration": 100
+  },
+  {
+    "id": "minecraft:glass",
+    "type": "minecraft:smelting",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "tag": "minecraft:smelts_to_glass",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:glass",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "duration": 200
+  },
+  {
+    "id": "minecraft:stone",
+    "type": "minecraft:smelting",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:cobblestone",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:stone",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "duration": 200
+  },
+  {
+    "id": "minecraft:dried_kelp_from_smelting",
+    "type": "minecraft:smelting",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:kelp",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:dried_kelp",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "duration": 200
+  },
+  {
+    "id": "minecraft:oak_planks",
+    "type": "minecraft:crafting_shapeless",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "tag": "minecraft:oak_logs",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:oak_planks",
+        "amount": 4,
+        "chance": 1
+      }
+    ],
+    "cells": 1
+  },
+  {
+    "id": "minecraft:stick",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "tag": "minecraft:planks",
+        "amount": 2
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:stick",
+        "amount": 4,
+        "chance": 1
+      }
+    ],
+    "cells": 2
+  },
+  {
+    "id": "minecraft:oak_slab",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:oak_planks",
+        "amount": 3
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:oak_slab",
+        "amount": 6,
+        "chance": 1
+      }
+    ],
+    "cells": 3
+  },
+  {
+    "id": "minecraft:crafting_table",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "tag": "minecraft:planks",
+        "amount": 4
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:crafting_table",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "cells": 4
+  },
+  {
+    "id": "minecraft:chest",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "tag": "minecraft:planks",
+        "amount": 8
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:chest",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "cells": 8
+  },
+  {
+    "id": "minecraft:barrel",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "tag": "minecraft:planks",
+        "amount": 6
+      },
+      {
+        "kind": "item",
+        "tag": "minecraft:wooden_slabs",
+        "amount": 2
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:barrel",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "cells": 8
+  },
+  {
+    "id": "minecraft:paper",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:sugar_cane",
+        "amount": 3
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:paper",
+        "amount": 3,
+        "chance": 1
+      }
+    ],
+    "cells": 3
+  },
+  {
+    "id": "minecraft:iron_bars",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_ingot",
+        "amount": 6
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:iron_bars",
+        "amount": 16,
+        "chance": 1
+      }
+    ],
+    "cells": 6
+  },
+  {
+    "id": "minecraft:clock",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:gold_ingot",
+        "amount": 4
+      },
+      {
+        "kind": "item",
+        "id": "minecraft:redstone",
+        "amount": 1
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:clock",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "cells": 5
+  },
+  {
+    "id": "minecraft:white_wool_from_string",
+    "type": "minecraft:crafting_shaped",
+    "mod": "minecraft",
+    "inputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:string",
+        "amount": 4
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "item",
+        "id": "minecraft:white_wool",
+        "amount": 1,
+        "chance": 1
+      }
+    ],
+    "cells": 4
+  }
+]

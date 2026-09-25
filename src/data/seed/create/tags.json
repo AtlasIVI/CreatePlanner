@@ -1,0 +1,29 @@
+{
+  "c:ingots/brass": [
+    "create:brass_ingot"
+  ],
+  "c:ingots/zinc": [
+    "create:zinc_ingot"
+  ],
+  "c:nuggets/zinc": [
+    "create:zinc_nugget"
+  ],
+  "c:plates/iron": [
+    "create:iron_sheet"
+  ],
+  "c:raw_materials/zinc": [
+    "create:raw_zinc"
+  ],
+  "c:plates/gold": [
+    "create:golden_sheet"
+  ],
+  "c:plates/brass": [
+    "create:brass_sheet"
+  ],
+  "c:plates/copper": [
+    "create:copper_sheet"
+  ],
+  "c:nuggets/brass": [
+    "create:brass_nugget"
+  ]
+}

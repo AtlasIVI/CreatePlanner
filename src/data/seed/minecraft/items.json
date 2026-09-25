@@ -1,0 +1,274 @@
+[
+  {
+    "id": "minecraft:andesite",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:barrel",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:birch_log",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:birch_planks",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:birch_slab",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:blast_furnace",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:chest",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:clay_ball",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:clock",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:cobblestone",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:copper_block",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:copper_ingot",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:copper_ore",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:crafting_table",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:deepslate_copper_ore",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:deepslate_gold_ore",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:deepslate_iron_ore",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:diorite",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:dried_kelp",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:flint",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:furnace",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:glass",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:gold_ingot",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:gold_nugget",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:gold_ore",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:granite",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:gravel",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:gunpowder",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:iron_bars",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:iron_block",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:iron_ingot",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:iron_nugget",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:iron_ore",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:kelp",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:lava",
+    "kind": "fluid"
+  },
+  {
+    "id": "minecraft:milk",
+    "kind": "fluid"
+  },
+  {
+    "id": "minecraft:netherrack",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:oak_leaves",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:oak_log",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:oak_planks",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:oak_slab",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:oak_wood",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:paper",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:quartz",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:raw_copper",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:raw_gold",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:raw_iron",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:red_sand",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:redstone",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:sand",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:slime_ball",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:smoker",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:spruce_log",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:spruce_planks",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:spruce_slab",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:stick",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:stone",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:stonecutter",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:string",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:stripped_birch_log",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:stripped_oak_log",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:stripped_oak_wood",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:stripped_spruce_log",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:sugar_cane",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:water",
+    "kind": "fluid"
+  },
+  {
+    "id": "minecraft:wheat",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:wheat_seeds",
+    "kind": "item"
+  },
+  {
+    "id": "minecraft:white_wool",
+    "kind": "item"
+  }
+]

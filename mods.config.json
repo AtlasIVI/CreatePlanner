@@ -1,0 +1,10 @@
+{
+  "gameVersion": "1.21.1",
+  "loader": "neoforge",
+  "mods": [
+    "create",
+    "createaddition",
+    "create-enchantment-industry",
+    "create-new-age"
+  ]
+}
