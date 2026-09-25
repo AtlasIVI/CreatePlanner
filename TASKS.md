@@ -8,6 +8,17 @@ Suivi du développement de CreatePlanner (Create 6.x, Minecraft 1.21.1, NeoForge
 Les fonctionnalités précédentes (jauges, écran façon jeu, adresses, simulation) sont retirées ; elles restent
 récupérables dans l'historique git.
 
+## Bibliothèque de blocs vanilla
+
+- [x]  : liste des blocs 1.21.1 (minecraft-data), modèles (archive JSON misode/mcmeta, 15 Mo),
+      textures (misode/mcmeta), noms FR/EN officiels →  (non versionné, textures Mojang)
+- [x] Icônes façon inventaire : cube 3D en CSS (dessus, face nord à gauche, face ouest à droite, ombrage des côtés),
+      calques teintés (herbe, feuillages) ; icône plate pour les autres formes
+- [x] Panneau « Blocs Minecraft » à côté de la grille, avec recherche FR/EN/id
+- [ ] Rendu 3D des formes non cubiques (escaliers, dalles, clôtures…) : icône plate pour l'instant (451 blocs)
+- [ ] Blocs à rendu spécial (coffres, lits, têtes, bannières…) : pas d'icône (61 blocs)
+- [ ] Teintes : couleurs par défaut des objets (herbe #91BD59, feuillage #48B518…) ; à comparer au jeu
+
 ## Données conservées
 
 - [x] `src/data/seed/` : objets, recettes, tags, noms FR/EN (vraies recettes Create 6 + vanilla)

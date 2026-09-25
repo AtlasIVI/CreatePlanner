@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { BlockLibrary } from './BlockLibrary';
 
 const STORAGE_KEY = 'createplanner:grid';
 const CELL = 48;
@@ -51,9 +52,12 @@ export function App() {
           <input type="number" min={1} max={64} value={size.height} onChange={(e) => setDim('height', e.target.valueAsNumber)} />
         </label>
       </header>
-      <main className="board-scroll">
-        <div className="board" style={{ width: size.width * CELL, height: size.height * CELL }} aria-label="Grille" />
-      </main>
+      <div className="layout">
+        <BlockLibrary />
+        <main className="board-scroll">
+          <div className="board" style={{ width: size.width * CELL, height: size.height * CELL }} aria-label="Grille" />
+        </main>
+      </div>
     </>
   );
 }

@@ -60,3 +60,147 @@ input:focus {
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
+
+.muted {
+  color: #a39a8a;
+}
+
+.small {
+  font-size: 12px;
+}
+
+code {
+  font-family: ui-monospace, Consolas, monospace;
+}
+
+.layout {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(100vh - 50px);
+}
+
+.layout .board-scroll {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Block library */
+
+.library {
+  width: 300px;
+  flex: none;
+  padding: 12px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  height: calc(100vh - 50px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.library h2 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--brass);
+}
+
+.library .search {
+  width: 100%;
+}
+
+.library p {
+  margin: 0;
+}
+
+.block-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 4px;
+}
+
+.block-list li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 2px;
+  border-radius: 6px;
+  cursor: default;
+}
+
+.block-list li:hover {
+  background: #2e2b26;
+}
+
+.block-name {
+  font-size: 11px;
+  text-align: center;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Block icon: orthographic CSS cube, rotated like the inventory view */
+
+.block-icon {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bi-cube {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(-30deg) rotateY(-45deg);
+}
+
+.bi-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.bi-layer,
+.bi-flat {
+  position: absolute;
+  inset: 0;
+  background-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+  image-rendering: pixelated;
+}
+
+.bi-flat {
+  position: relative;
+}
+
+.bi-top {
+  transform: rotateX(90deg) translateZ(var(--half));
+}
+
+.bi-left {
+  transform: translateZ(var(--half));
+  filter: brightness(0.8);
+}
+
+.bi-right {
+  transform: rotateY(90deg) translateZ(var(--half));
+  filter: brightness(0.6);
+}
+
+.bi-none {
+  border-radius: 6px;
+  background: #3d3830;
+  color: #a39a8a;
+  font-weight: 700;
+}
