@@ -6,6 +6,7 @@ import { machineFiles } from '../data/machineFiles';
 import { Ctx } from './context';
 import { DataView } from './DataView';
 import { LogisticsView } from './LogisticsView';
+import { MaterialsView } from './MaterialsView';
 import { PlannerView } from './PlannerView';
 import {
   downloadJson,
@@ -20,10 +21,11 @@ import {
 const loaded = loadMods();
 const allMods = loaded.mods.map((m) => m.mod);
 
-type Tab = 'plan' | 'logistics' | 'data';
+type Tab = 'plan' | 'logistics' | 'materials' | 'data';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'plan', label: 'Production' },
   { id: 'logistics', label: 'Logistique' },
+  { id: 'materials', label: 'Matériaux' },
   { id: 'data', label: 'Données & mods' },
 ];
 
@@ -87,6 +89,7 @@ export function App() {
   const views: Record<Tab, ReactNode> = {
     plan: <PlannerView />,
     logistics: <LogisticsView />,
+    materials: <MaterialsView />,
     data: <DataView allMods={allMods} />,
   };
 

@@ -93,6 +93,10 @@ export interface Project {
   logistics: LogisticsState;
   /** Items already owned, subtracted from the material list. */
   stock: Record<Id, number>;
+  /** Recipe choices for the material list (item -> recipe id or 'raw'). */
+  materialChoice: Record<Id, string>;
+  /** Which parts of the project feed the material list. */
+  materialSources: { plan: boolean; sources: boolean; logistics: boolean; grid: boolean };
   grid: GridState;
 }
 
@@ -126,6 +130,8 @@ export function emptyProject(name = 'Nouveau projet'): Project {
     sources: [],
     logistics: { modules: [], horizon: 600 },
     stock: {},
+    materialChoice: {},
+    materialSources: { plan: true, sources: true, logistics: true, grid: true },
     grid: { cells: {}, layer: 0, width: 24, depth: 16 },
   };
 }
@@ -149,6 +155,8 @@ export function normalizeProject(raw: unknown): Project {
     sources: Array.isArray(p.sources) ? p.sources : [],
     logistics: { ...base.logistics, ...(isObj(p.logistics) ? p.logistics : {}) },
     stock: isObj(p.stock) ? (p.stock as Record<Id, number>) : {},
+    materialChoice: isObj(p.materialChoice) ? (p.materialChoice as Record<Id, string>) : {},
+    materialSources: { ...base.materialSources, ...(isObj(p.materialSources) ? p.materialSources : {}) },
     grid: { ...base.grid, ...(isObj(p.grid) ? p.grid : {}) },
   };
 }

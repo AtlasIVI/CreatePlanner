@@ -544,6 +544,31 @@
       "cogShaftFaces": []
     },
     {
+      "id": "create:hand_application",
+      "names": {
+        "fr": "Application à la main",
+        "en": "Item application by hand"
+      },
+      "recipeTypes": [
+        "create:item_application"
+      ],
+      "kinetic": false,
+      "manual": true,
+      "blocks": [],
+      "stressImpact": {
+        "value": 0,
+        "source": "n/a",
+        "verified": true,
+        "note": "Not kinetic"
+      },
+      "speed": {
+        "ticksPerOperation": "20",
+        "source": "assumption",
+        "verified": false,
+        "note": "Right-click by hand: 1 operation per second assumed."
+      }
+    },
+    {
       "id": "create:sequenced_assembly",
       "names": {
         "fr": "Assemblage séquencé",

@@ -31,10 +31,11 @@ Suivi du développement de CreatePlanner (Create 6.x, Minecraft 1.21.1, NeoForge
 
 ## Phase 3 — Liste de matériaux
 
-- [ ] Blocs à poser (plan + grille + logistique)
-- [ ] Ressources brutes (déroulé récursif des crafts)
-- [ ] Stock existant éditable, soustrait
-- [ ] Export CSV et copie presse-papiers
+- [x] Blocs à poser (plan, sources, logistique, grille — chaque origine activable)
+- [x] Ressources brutes (déroulé récursif en crafts entiers, surplus réutilisés, recettes « à la main » préférées)
+- [x] Stock existant éditable (par ligne ou via l'éditeur), soustrait à chaque niveau
+- [x] Export CSV (séparateur « ; », virgule décimale, BOM UTF-8) et copie presse-papiers
+- [x] Choix de recette par objet pour la liste de matériaux (indépendant du plan)
 
 ## Phase 4 — Grille de placement 2D
 
@@ -80,6 +81,9 @@ Valeurs vérifiées dans `Creators-of-Create/Create` branche `mc1.21.1/dev` (jui
 - Établis mécaniques : temps de cycle (nombre de transferts dans la grille).
 - Établi / tailleur de pierre à la main : 1 opération/s supposée.
 - Tapis : 1 objet « Tapis roulant » pour 2 blocs.
+- Application d'objet à la main : 1 opération/s supposée.
+- Liste de matériaux, logistique : 1 port grenouille par module sur chaîne, convoyeurs = longueur/32 + 1 ; les chaînes
+  (objet minecraft:chain) entre convoyeurs ne sont pas comptées.
 - Espacement des colis sur une chaîne, espacement des objets sur un tapis, cycle du port grenouille, délai de promesse max (30 min).
 
 ### Corrections

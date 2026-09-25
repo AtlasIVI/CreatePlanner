@@ -558,3 +558,22 @@ tr.hl td {
   border-radius: 2px;
   vertical-align: middle;
 }
+
+tr.done td {
+  opacity: 0.55;
+}
+
+.stock-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+
+.stock-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
