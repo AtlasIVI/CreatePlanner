@@ -10,7 +10,6 @@ import {
   removeGauge,
   sendManual,
   stepSim,
-  targetAmount,
   expectedOutput,
   type Board,
   type ChanceOutput,
@@ -23,12 +22,18 @@ import {
 import type { Id } from '../core/types';
 import { dataOrigin, itemName, stackSize, treatmentRecipes, treatmentTypeName } from '../data/items';
 import { fmt, fmtTime, ItemIcon, ItemPicker, Num } from './common';
+import { GaugeScreen } from './GaugeScreen';
 
 const STORAGE_KEY = 'createplanner:gauges';
 const CELL = 92;
 
 type Selection = { kind: 'gauge' | 'dest'; id: string } | null;
-type Mode = { kind: 'select' } | { kind: 'place-gauge' } | { kind: 'place-dest'; id: string } | { kind: 'connect'; target: string };
+type Mode =
+  | { kind: 'select' }
+  | { kind: 'place-gauge' }
+  | { kind: 'place-dest'; id: string }
+  | { kind: 'connect'; target: string }
+  | { kind: 'move'; id: string };
 
 function loadBoard(): Board {
   try {
@@ -61,6 +66,8 @@ export function App() {
   const [speed, setSpeed] = useState(1);
   const [sel, setSel] = useState<Selection>(null);
   const [mode, setMode] = useState<Mode>({ kind: 'select' });
+  /** Gauge whose in-game screen is open. */
+  const [screen, setScreen] = useState<string | null>(null);
 
   const setBoard = useCallback((fn: (b: Board) => Board) => setBoardState((b) => fn(b)), []);
   useEffect(() => {
@@ -114,6 +121,10 @@ export function App() {
       setBoard((b) => ({ ...b, gauges: [...b.gauges, g] }));
       setSel({ kind: 'gauge', id: g.id });
       setMode({ kind: 'select' });
+    } else if (mode.kind === 'move' && !occupied(x, y)) {
+      patchGauge(mode.id, { x, y });
+      setMode({ kind: 'select' });
+      setScreen(mode.id);
     } else if (mode.kind === 'place-dest' && !occupied(x, y)) {
       patchDest(mode.id, { x, y });
       setMode({ kind: 'select' });
@@ -128,9 +139,12 @@ export function App() {
       }
       setMode({ kind: 'select' });
       setSel({ kind: 'gauge', id: mode.target });
+      setScreen(mode.target);
       return;
     }
+    if (mode.kind === 'move') return;
     setSel({ kind: 'gauge', id: g.id });
+    setScreen(g.id);
   };
 
   const drop = (x: number, y: number, data: string) => {
@@ -142,6 +156,8 @@ export function App() {
 
   const sim = simRef.current;
   const selected = sel?.kind === 'gauge' ? board.gauges.find((g) => g.id === sel.id) : undefined;
+  const screenGauge = screen ? board.gauges.find((g) => g.id === screen) : undefined;
+  const closeScreen = useCallback(() => setScreen(null), []);
   const selectedDest = sel?.kind === 'dest' ? board.destinations.find((d) => d.id === sel.id) : undefined;
 
   const fileInput = useRef<HTMLInputElement>(null);
@@ -244,17 +260,16 @@ export function App() {
 
         <aside className="right">
           {selected && (
-            <GaugeEditor
+            <PlannerSettings
               g={selected}
               board={board}
               sim={sim}
               patch={(v) => patchGauge(selected.id, v)}
+              openScreen={() => setScreen(selected.id)}
               remove={() => {
                 setBoard((b) => removeGauge(b, selected.id));
                 setSel(null);
               }}
-              connect={() => setMode({ kind: 'connect', target: selected.id })}
-              connecting={mode.kind === 'connect'}
             />
           )}
           {selectedDest && (
@@ -281,6 +296,44 @@ export function App() {
           )}
         </aside>
       </div>
+      <datalist id="addresses">
+        {board.destinations.map((d) => (
+          <option key={d.id} value={d.address} />
+        ))}
+      </datalist>
+      {screenGauge && (
+        <GaugeScreen
+          g={screenGauge}
+          board={board}
+          sim={sim}
+          patch={(v) => patchGauge(screenGauge.id, v)}
+          close={closeScreen}
+          onConnect={() => {
+            setScreen(null);
+            setMode({ kind: 'connect', target: screenGauge.id });
+          }}
+          onRelocate={() => {
+            setScreen(null);
+            setMode({ kind: 'move', id: screenGauge.id });
+          }}
+          onResetPromises={() => {
+            sim.promises = sim.promises.filter((p) => p.gauge !== screenGauge.id);
+            redraw();
+          }}
+        >
+          <PlannerSettings
+            g={screenGauge}
+            board={board}
+            sim={sim}
+            patch={(v) => patchGauge(screenGauge.id, v)}
+            remove={() => {
+              setBoard((b) => removeGauge(b, screenGauge.id));
+              setScreen(null);
+              setSel(null);
+            }}
+          />
+        </GaugeScreen>
+      )}
     </>
   );
 }
@@ -292,7 +345,9 @@ function modeHint(mode: Mode, board: Board): string {
     case 'place-dest':
       return `Cliquez une case libre pour placer « ${board.destinations.find((d) => d.id === mode.id)?.address} ».`;
     case 'connect':
-      return 'Cliquez la jauge à relier comme entrée (Échap pour annuler).';
+      return 'Cliquez sur une seconde jauge pour la connecter... (Échap pour annuler)';
+    case 'move':
+      return 'Cliquez sur un endroit pour y déplacer ce panneau... (Échap pour annuler)';
     default:
       return 'Glissez une jauge ou une adresse pour la déplacer.';
   }
@@ -332,7 +387,7 @@ function BoardView({
       cells.push(
         <div
           key={`${x},${y}`}
-          className={`cell ${mode.kind === 'place-gauge' || mode.kind === 'place-dest' ? 'placing' : ''}`}
+          className={`cell ${mode.kind === 'place-gauge' || mode.kind === 'place-dest' || mode.kind === 'move' ? 'placing' : ''}`}
           style={{ left: x * CELL, top: y * CELL, width: CELL, height: CELL }}
           onClick={() => onCell(x, y)}
           onDragOver={(e) => e.preventDefault()}
@@ -457,54 +512,22 @@ function BoardView({
 // Gauge configuration (mirrors the in-game screen)
 // ---------------------------------------------------------------------------
 
-const TIMEOUTS: { v: number; label: string }[] = [
-  { v: -1, label: 'Jamais' },
-  { v: 0, label: '30 secondes' },
-  ...[1, 2, 5, 10, 15, 20, 30].map((m) => ({ v: m, label: `${m} min` })),
-];
-
-function GaugeEditor({
-  g,
-  board,
-  sim,
-  patch,
-  remove,
-  connect,
-  connecting,
-}: {
-  g: Gauge;
-  board: Board;
-  sim: SimState;
-  patch: (v: Partial<Gauge>) => void;
-  remove: () => void;
-  connect: () => void;
-  connecting: boolean;
-}) {
+/** Settings that do not exist on the in-game screen: name, what the gauge is placed on, farm / restock details. */
+function PlannerSettings({ g, board, sim, patch, remove, openScreen }: { g: Gauge; board: Board; sim: SimState; patch: (v: Partial<Gauge>) => void; remove: () => void; openScreen?: () => void }) {
   const st = gaugeStatus(sim, g, stackSize);
-  const byId = new Map(board.gauges.map((x) => [x.id, x]));
   const feeds = board.gauges.filter((x) => x.inputs.some((i) => i.from === g.id));
   const dest = g.address ? findDestination(board, g.address) : undefined;
   return (
     <section className="card editor">
-      <h2>Jauge d'usine</h2>
+      <h2>{openScreen ? 'Jauge d’usine' : 'Réglages du planificateur'}</h2>
+      {openScreen && (
+        <button className="wide" onClick={openScreen}>
+          Ouvrir l’écran de la jauge
+        </button>
+      )}
       <label className="field">
         <span>Nom</span>
         <input value={g.label} onChange={(e) => patch({ label: e.target.value })} />
-      </label>
-      <label className="field">
-        <span>Objet surveillé (filtre)</span>
-        <ItemPicker value={g.item} onChange={(item) => patch({ item, label: /^Jauge \d+$/.test(g.label) || g.label === itemName(g.item) ? itemName(item) : g.label })} />
-      </label>
-      <label className="field">
-        <span>Garder en stock</span>
-        <div className="row">
-          <Num value={g.amount} min={0} max={g.unit === 'stacks' ? 9999 : 999999} onChange={(amount) => patch({ amount })} label="Quantité" />
-          <select value={g.unit} onChange={(e) => patch({ unit: e.target.value as Gauge['unit'] })} aria-label="Unité">
-            <option value="items">objets</option>
-            <option value="stacks">piles</option>
-          </select>
-        </div>
-        {g.unit === 'stacks' && g.item && <span className="muted small">= {targetAmount(g, stackSize)} objets</span>}
       </label>
       <label className="field">
         <span>Posée sur</span>
@@ -514,39 +537,9 @@ function GaugeEditor({
           <option value="farm">Lien de stock — alimenté par une ferme</option>
         </select>
       </label>
-      {g.mode !== 'farm' && (
-      <label className="field">
-        <span>Adresse {g.mode === 'recipe' ? 'de la recette (où envoyer les entrées)' : 'de livraison'}</span>
-        <input value={g.address} list="addresses" placeholder="ex. presse, four*" onChange={(e) => patch({ address: e.target.value })} />
-        {g.address && !dest && <span className="warn small">Aucune adresse de la liste ne correspond.</span>}
-      </label>
-      )}
-      <datalist id="addresses">
-        {board.destinations.map((d) => (
-          <option key={d.id} value={d.address} />
-        ))}
-      </datalist>
-      {g.mode === 'recipe' && (
-        <label className="field">
-          <span>Sortie de recette (objets promis par requête)</span>
-          <Num value={g.recipeOutput} min={1} max={9999} onChange={(recipeOutput) => patch({ recipeOutput })} />
-          <ExpectedHint g={g} board={board} dest={dest} patch={patch} />
-        </label>
-      )}
-      {g.mode !== 'farm' && (
-      <label className="field">
-        <span>Délai d'expiration des promesses</span>
-        <select value={g.promiseTimeout} onChange={(e) => patch({ promiseTimeout: Number(e.target.value) })}>
-          {TIMEOUTS.map((t) => (
-            <option key={t.v} value={t.v}>
-              {t.label}
-            </option>
-          ))}
-        </select>
-      </label>
-      )}
-
-      {g.mode === 'farm' ? (
+      {g.address && g.mode !== 'farm' && !dest && <p className="warn small">Aucune adresse de la liste ne correspond à « {g.address} ».</p>}
+      {g.mode === 'recipe' && <ExpectedHint g={g} board={board} dest={dest} patch={patch} />}
+      {g.mode === 'farm' && (
         <>
           <label className="field">
             <span>Production de la ferme (objets/min)</span>
@@ -556,42 +549,10 @@ function GaugeEditor({
             <input type="checkbox" checked={g.farmStopsAtTarget} onChange={() => patch({ farmStopsAtTarget: !g.farmStopsAtTarget })} /> La ferme s'arrête quand la cible est atteinte
             (ex. coupée par redstone)
           </label>
-          <p className="muted small">
-            La jauge ne commande rien : elle surveille le stock que la ferme remplit. Reliez-la en entrée d'autres jauges pour qu'elles
-            consomment cet objet.
-          </p>
+          <p className="muted small">La jauge ne commande rien : elle surveille le stock que la ferme remplit.</p>
         </>
-      ) : g.mode === 'recipe' ? (
-        <div className="field">
-          <span>Entrées (jauges reliées, quantité par requête)</span>
-          {g.inputs.length === 0 && <span className="muted small">Aucune : la jauge ne fait que surveiller son stock.</span>}
-          {g.inputs.map((inp, i) => {
-            const src = byId.get(inp.from);
-            return (
-              <div key={inp.from} className="row input-row">
-                <ItemIcon id={src?.item ?? null} />
-                <span className="grow" title={src?.label}>
-                  {src ? itemName(src.item) : '(supprimée)'}
-                </span>
-                <Num
-                  value={inp.amount}
-                  min={1}
-                  max={9999}
-                  width={60}
-                  label="Quantité"
-                  onChange={(amount) => patch({ inputs: g.inputs.map((x, j) => (j === i ? { ...x, amount } : x)) })}
-                />
-                <button className="ghost" onClick={() => patch({ inputs: g.inputs.filter((_, j) => j !== i) })} aria-label="Retirer l'entrée">
-                  ×
-                </button>
-              </div>
-            );
-          })}
-          <button className={connecting ? 'active' : ''} onClick={connect}>
-            {connecting ? 'Cliquez une jauge…' : '+ Relier une jauge en entrée'}
-          </button>
-        </div>
-      ) : (
+      )}
+      {g.mode === 'restock' && (
         <>
           <label className="field">
             <span>Stock initial de l'inventaire rempli</span>
@@ -603,9 +564,7 @@ function GaugeEditor({
           </label>
         </>
       )}
-
       {feeds.length > 0 && <p className="small muted">Alimente : {feeds.map((f) => f.label).join(', ')}</p>}
-
       <div className={`status st-${st.state}`}>
         <div>
           <strong>{STATE_FR[st.state]}</strong>

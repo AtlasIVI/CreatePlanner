@@ -47,6 +47,8 @@ export interface Gauge {
   farmPerMin: number;
   /** Farm mode: the farm is switched off while the stock is at or above the target. */
   farmStopsAtTarget: boolean;
+  /** "Use mechanical crafting" toggle of the in-game screen (kept for fidelity, no effect on the simulation). */
+  crafting: boolean;
 }
 
 /** An address: where packages go (frogport, postbox, packager at a machine). */
@@ -121,6 +123,7 @@ export function newGauge(x: number, y: number, n: number): Gauge {
     consumptionPerMin: 0,
     farmPerMin: 0,
     farmStopsAtTarget: false,
+    crafting: false,
   };
 }
 

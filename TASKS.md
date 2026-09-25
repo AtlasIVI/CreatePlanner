@@ -16,6 +16,10 @@ Suivi du développement de CreatePlanner (Create 6.x, Minecraft 1.21.1, NeoForge
 - [x] Traitements par adresse avec sorties en pourcentage (ex. « fan:wash » : gravier → silex 25 %, pépite de fer 12,5 %),
       chargeables depuis les recettes Create ; simulation en moyenne ou en tirage aléatoire ; les sous-produits
       retournent au réseau ; la jauge indique ce qu'une requête rapporte en moyenne
+- [x] Écran de jauge façon jeu (FactoryPanelScreen) : même disposition, textes officiels FR de Create, molette pour les
+      quantités / la sortie / l'expiration, clic gauche pour déconnecter une entrée ou réinitialiser les promesses,
+      ＋ = connecter (clic sur une 2e jauge), ✥ = déplacer, poubelle = réinitialiser, ✓ = fermer ; dessiné en CSS
+      (aucune texture du jeu copiée)
 - [x] Stock du réseau : initial, apports et consommations par minute
 - [x] Envoi manuel de colis vers une adresse
 - [x] Sauvegarde automatique (navigateur), export / import JSON

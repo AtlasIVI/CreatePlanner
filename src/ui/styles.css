@@ -631,3 +631,336 @@ button.small {
   font-size: 12px;
   padding: 2px 6px;
 }
+
+/* ------------------------------------------------------------------------
+   In-game factory gauge screen (Create 6 FactoryPanelScreen), GUI scale 2
+   ------------------------------------------------------------------------ */
+
+.mc-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(10, 8, 6, 0.72);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 40px 16px;
+}
+
+.mc-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.mc-window {
+  position: relative;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 13px;
+  image-rendering: pixelated;
+  flex: none;
+}
+
+.mc-window > * {
+  position: absolute;
+}
+
+.mc-top {
+  background: repeating-linear-gradient(180deg, #8c5d4b 0 14px, #875a4d 14px 16px);
+  border: 2px solid #3a2520;
+  border-top: none;
+  box-shadow: inset 2px 0 #a4735e, inset -2px 0 #6e4841;
+}
+
+.mc-top > * {
+  position: absolute;
+}
+
+.mc-title-bar {
+  background: linear-gradient(#a8c4df 0 2px, #68849f 2px);
+  border-bottom: 2px solid #3d4f61;
+}
+
+.mc-title {
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #1f1e26;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.mc-top.restock .mc-title {
+  color: #1f1e26;
+}
+
+.mc-grid-frame {
+  background: #6e4841;
+  border: 2px solid #4a2d31;
+  border-radius: 2px;
+  box-shadow: 0 2px 0 #4a2d31;
+}
+
+.mc-slot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #8b8b8b;
+  border: 2px solid;
+  border-color: #373737 #ffffff #ffffff #373737;
+  cursor: default;
+  z-index: 1;
+}
+
+.mc-slot[role='button'] {
+  cursor: pointer;
+}
+
+.mc-slot:hover {
+  background: #a4a4a4;
+}
+
+.mc-slot-light {
+  background: #b59370;
+  border-color: #6e4841 #d8b894 #d8b894 #6e4841;
+}
+
+.mc-slot-light:hover {
+  background: #c8a784;
+}
+
+.mc-slot-dark {
+  background: #8b8b8b;
+}
+
+.mc-slot-flat {
+  background: transparent;
+  border-color: transparent;
+}
+
+.mc-slot-flat:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mc-count {
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  text-shadow: 2px 2px 0 #3f3f3f;
+  pointer-events: none;
+}
+
+.mc-btn {
+  position: absolute;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #c6c6c6;
+  border: 2px solid;
+  border-color: #ffffff #555555 #555555 #ffffff;
+  border-radius: 0;
+  color: #3f3f3f;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.mc-btn:hover:not(:disabled) {
+  background: #d8d8e8;
+  color: #1f1e26;
+}
+
+.mc-btn.on {
+  background: #9fb8d0;
+  border-color: #555555 #ffffff #ffffff #555555;
+}
+
+.mc-3x3 {
+  width: 16px;
+  height: 16px;
+  background:
+    linear-gradient(90deg, transparent 4px, #3f3f3f 4px 6px, transparent 6px 10px, #3f3f3f 10px 12px, transparent 12px),
+    linear-gradient(transparent 4px, #3f3f3f 4px 6px, transparent 6px 10px, #3f3f3f 10px 12px, transparent 12px);
+  border: 2px solid #3f3f3f;
+}
+
+.mc-arrow {
+  background: #4a2d31;
+  clip-path: polygon(0 30%, 55% 30%, 55% 0, 100% 50%, 55% 100%, 55% 70%, 0 70%);
+}
+
+.mc-bottom {
+  background: transparent;
+}
+
+.mc-bottom > * {
+  position: absolute;
+}
+
+.mc-address-strip {
+  background: repeating-linear-gradient(180deg, #875a4d 0 14px, #825649 14px 16px);
+  border: 2px solid #3a2520;
+  border-top: none;
+  box-shadow: inset 2px 0 #a4735e, inset -2px 0 #6e4841;
+}
+
+.mc-tag-icon {
+  color: #f8f8ec;
+  font-size: 22px;
+  line-height: 28px;
+  text-shadow: 2px 2px 0 #4a2d31;
+}
+
+.mc-address {
+  background: #f8f8ec;
+  border: 2px solid #000;
+  border-radius: 0 8px 8px 0;
+  color: #1f1e26;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 2px 6px;
+  z-index: 2;
+}
+
+.mc-address.empty {
+  box-shadow: 0 0 0 2px #e36d5f;
+}
+
+.mc-address::placeholder {
+  color: #8b8b8b;
+}
+
+.mc-bar {
+  background: #c6c6c6;
+  border: 2px solid;
+  border-color: #ffffff #555555 #555555 #ffffff;
+  clip-path: polygon(0 0, 96% 0, 100% 50%, 96% 100%, 0 100%);
+}
+
+.mc-package {
+  width: 26px;
+  height: 24px;
+  background:
+    linear-gradient(90deg, transparent 10px, #e6d9a8 10px 16px, transparent 16px),
+    linear-gradient(#b98a52, #8f6538);
+  border: 2px solid #5a3d1c;
+  border-radius: 3px;
+}
+
+.mc-clock {
+  font-size: 16px;
+  color: #3f3f3f;
+}
+
+.mc-scroll {
+  display: flex;
+  align-items: center;
+  padding-left: 6px;
+  background: #8b8b8b;
+  border: 2px solid;
+  border-color: #373737 #ffffff #ffffff #373737;
+  color: #eeeeee;
+  font-weight: 700;
+  text-shadow: 2px 2px 0 #3f3f3f;
+  cursor: ns-resize;
+  user-select: none;
+  z-index: 1;
+}
+
+.mc-trash {
+  font-size: 16px;
+  filter: grayscale(1);
+}
+
+.mc-check {
+  color: #3f3f3f;
+}
+
+.mc-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.mc-gauge-face {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f1e6c8 0 52%, #c49a4a 53% 60%, #7a5a2a 61% 66%, #3d3830 67%);
+  box-shadow: 0 6px 0 #2a2520, 0 0 0 6px #6e6e6e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mc-block-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: #c6c6c6;
+  border: 2px solid;
+  border-color: #ffffff #555555 #555555 #ffffff;
+  color: #3f3f3f;
+  font-size: 13px;
+}
+
+.mc-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mc-value input {
+  width: 80px;
+  background: #8b8b8b;
+  color: #fff;
+  border: 2px solid;
+  border-color: #373737 #ffffff #ffffff #373737;
+  border-radius: 0;
+  font-weight: 700;
+  text-shadow: 1px 1px 0 #3f3f3f;
+}
+
+.mc-value-label {
+  font-weight: 600;
+}
+
+.mc-unit {
+  background: #b0b0b0;
+  color: #3f3f3f;
+  border: 2px solid;
+  border-color: #ffffff #555555 #555555 #ffffff;
+  border-radius: 0;
+  padding: 2px 6px;
+}
+
+.mc-unit.on {
+  background: #68849f;
+  color: #fff;
+}
+
+.mc-picker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 320px;
+  z-index: 60;
+  padding: 6px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.mc-extras {
+  width: 400px;
+  max-width: 100%;
+}
