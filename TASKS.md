@@ -39,11 +39,14 @@ Suivi du développement de CreatePlanner (Create 6.x, Minecraft 1.21.1, NeoForge
 
 ## Phase 4 — Grille de placement 2D
 
-- [ ] Grille par couche (vue de dessus, curseur Y)
-- [ ] Placer / tourner / supprimer machines, arbres, roues dentées, boîtes de vitesses, tapis, sources, ports, jauges
-- [ ] Réseau cinétique déduit : propagation des tr/min (×2 / ÷2, boîte de vitesses), stress par réseau
-- [ ] Conflits (sens opposés, vitesses différentes) et surcharge
-- [ ] La grille alimente la liste de matériaux et le calculateur
+- [x] Grille par couche (vue de dessus, curseur Y, taille réglable, aperçu de la couche inférieure)
+- [x] Placer / tourner (touche R) / supprimer / inspecter : machines, arbres, roues dentées, grandes roues, boîtes de vitesses,
+  tapis, sources (paramètres, sens inversé), ports grenouille, jauges, empaqueteurs, liens de stock, convoyeurs à chaîne
+- [x] Réseau cinétique déduit (règles de RotationPropagator) : arbres, engrenages ×-1, grande→petite ×-2, petite→grande ×-0,5,
+  grandes roues à angle droit, boîte de vitesses selon le côté d'entrée, tapis ; stress et capacité par réseau
+- [x] Conflits : sens opposés, vitesses incompatibles, sources en désaccord, vitesse > 256 tr/min ; surcharge (machines à l'arrêt)
+- [x] Les blocs placés alimentent la liste de matériaux ; débit des machines placées comparé à l'étape du plan
+- [ ] Plusieurs blocs dans une même case (ex. arbre + roue dentée encastrés) non gérés : une case = un bloc
 
 ## Découvertes
 
@@ -85,6 +88,11 @@ Valeurs vérifiées dans `Creators-of-Create/Create` branche `mc1.21.1/dev` (jui
 - Liste de matériaux, logistique : 1 port grenouille par module sur chaîne, convoyeurs = longueur/32 + 1 ; les chaînes
   (objet minecraft:chain) entre convoyeurs ne sont pas comptées.
 - Espacement des colis sur une chaîne, espacement des objets sur un tapis, cycle du port grenouille, délai de promesse max (30 min).
+
+- **Grille** : une boucle de boîtes de vitesses entre deux roues engrenées est cohérente avec les règles de Create (pas de
+  conflit) ; un tapis reliant les arbres de deux roues engrenées force des sens opposés (conflit), comme en jeu.
+- **Grille** : les sources ont un sens positif sur leur axe par défaut (case « sens inversé ») ; le vrai signe dépend de
+  l'orientation du bloc en jeu — à vérifier par source.
 
 ### Corrections
 

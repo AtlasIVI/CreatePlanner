@@ -5,6 +5,7 @@ import { loadMods } from '../data/loader';
 import { machineFiles } from '../data/machineFiles';
 import { Ctx } from './context';
 import { DataView } from './DataView';
+import { GridView } from './GridView';
 import { LogisticsView } from './LogisticsView';
 import { MaterialsView } from './MaterialsView';
 import { PlannerView } from './PlannerView';
@@ -21,11 +22,12 @@ import {
 const loaded = loadMods();
 const allMods = loaded.mods.map((m) => m.mod);
 
-type Tab = 'plan' | 'logistics' | 'materials' | 'data';
+type Tab = 'plan' | 'logistics' | 'materials' | 'grid' | 'data';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'plan', label: 'Production' },
   { id: 'logistics', label: 'Logistique' },
   { id: 'materials', label: 'Matériaux' },
+  { id: 'grid', label: 'Grille' },
   { id: 'data', label: 'Données & mods' },
 ];
 
@@ -90,6 +92,7 @@ export function App() {
     plan: <PlannerView />,
     logistics: <LogisticsView />,
     materials: <MaterialsView />,
+    grid: <GridView />,
     data: <DataView allMods={allMods} />,
   };
 
