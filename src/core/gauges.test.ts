@@ -124,6 +124,29 @@ describe('restock gauge', () => {
   });
 });
 
+describe('farm gauge', () => {
+  it('adds the farm output to the network and feeds a recipe gauge', () => {
+    const b = pressBoard();
+    b.stock = {};
+    b.gauges[0] = { ...b.gauges[0], mode: 'farm', farmPerMin: 1300 };
+    const sim = initSim(b);
+    stepSim(b, sim, 20 * 60);
+    // 1300 in a minute, minus the ingots the press gauge requested (2 per request)
+    const used = sim.packages.length * 2;
+    expect(sim.stock['minecraft:iron_ingot']).toBeCloseTo(1300 - used, 6);
+    expect(gaugeStatus(sim, b.gauges[0]).state).toBe('satisfied');
+  });
+
+  it('can stop the farm once the target is reached', () => {
+    const b = emptyBoard();
+    b.gauges = [{ ...newGauge(0, 0, 1), id: 'cobble', item: 'minecraft:cobblestone', mode: 'farm', farmPerMin: 1300, amount: 100, farmStopsAtTarget: true }];
+    const sim = initSim(b);
+    stepSim(b, sim, 20 * 60);
+    expect(sim.stock['minecraft:cobblestone']).toBeLessThan(102);
+    expect(sim.stock['minecraft:cobblestone']).toBeGreaterThanOrEqual(100);
+  });
+});
+
 describe('helpers', () => {
   it('matches addresses with * wildcards, ignoring case', () => {
     expect(matchAddress('Four*', 'four-1')).toBe(true);

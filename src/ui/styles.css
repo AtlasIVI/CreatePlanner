@@ -581,3 +581,21 @@ td.num {
     grid-template-columns: 1fr;
   }
 }
+
+.gauge.st-farming,
+.status.st-farming {
+  border-color: #8fbf6a;
+  color: #8fbf6a;
+}
+
+.badge.farm {
+  background: #8fbf6a;
+  color: #17240f;
+}
+
+.inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}

@@ -11,6 +11,8 @@ Suivi du développement de CreatePlanner (Create 6.x, Minecraft 1.21.1, NeoForge
 - [x] Liste d'adresses (temps de trajet, temps de fabrication sur place), plaçables sur la grille, joker « * »
 - [x] Simulation au tick : requête toutes les 101 ticks tant que stock + promis < cible, entrées tout-ou-rien,
       colis de 9 piles max, promesses et expiration, colis sans adresse correspondante non livrés
+- [x] Jauge alimentée par une ferme (ex. pierre 1300/min) : ne commande rien, surveille le stock ; option « la ferme
+      s'arrête à la cible »
 - [x] Stock du réseau : initial, apports et consommations par minute
 - [x] Envoi manuel de colis vers une adresse
 - [x] Sauvegarde automatique (navigateur), export / import JSON

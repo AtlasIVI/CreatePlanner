@@ -15,7 +15,8 @@ export const GAUGE_TIMER = 100;
 export const PACKAGE_SLOTS = 9;
 export const DEFAULT_STACK = 64;
 
-export type GaugeMode = 'recipe' | 'restock';
+/** recipe: crafted on request; restock: on a packager; farm: the item comes from a farm, the gauge only watches it. */
+export type GaugeMode = 'recipe' | 'restock' | 'farm';
 export type AmountUnit = 'items' | 'stacks';
 
 export interface GaugeInput {
@@ -42,6 +43,10 @@ export interface Gauge {
   /** Restock mode: items in the inventory the packager fills, and how fast it is used. */
   localStock: number;
   consumptionPerMin: number;
+  /** Farm mode: items the farm puts into the network per minute. */
+  farmPerMin: number;
+  /** Farm mode: the farm is switched off while the stock is at or above the target. */
+  farmStopsAtTarget: boolean;
 }
 
 /** An address: where packages go (frogport, postbox, packager at a machine). */
@@ -96,6 +101,8 @@ export function newGauge(x: number, y: number, n: number): Gauge {
     inputs: [],
     localStock: 0,
     consumptionPerMin: 0,
+    farmPerMin: 0,
+    farmStopsAtTarget: false,
   };
 }
 
@@ -205,7 +212,7 @@ export interface GaugeStatus {
   inStorage: number;
   promised: number;
   target: number;
-  state: 'idle' | 'satisfied' | 'promised' | 'waiting' | 'missing-inputs' | 'no-address';
+  state: 'idle' | 'satisfied' | 'promised' | 'waiting' | 'farming' | 'missing-inputs' | 'no-address';
 }
 
 export function gaugeStatus(sim: SimState, g: Gauge, stackSize?: (id: Id) => number): GaugeStatus {
@@ -216,6 +223,7 @@ export function gaugeStatus(sim: SimState, g: Gauge, stackSize?: (id: Id) => num
   if (g.item) {
     if (inStorage >= target) state = 'satisfied';
     else if (inStorage + promised >= target) state = 'promised';
+    else if (g.mode === 'farm') state = g.farmPerMin > 0 ? 'farming' : 'waiting';
     else if (g.mode === 'recipe' && g.inputs.length === 0) state = 'waiting';
     else if (!g.address.trim()) state = 'no-address';
     else state = sim.blocked[g.id] === 'inputs' ? 'missing-inputs' : 'waiting';
@@ -302,6 +310,12 @@ export function stepSim(board: Board, sim: SimState, ticks = 1, stackSize: (id: 
       sim.stock[item] = (sim.stock[item] ?? 0) - take;
       if (want - take > 1e-9) sim.unmet[item] = (sim.unmet[item] ?? 0) + (want - take);
     }
+    // Farms feeding the network
+    for (const g of board.gauges) {
+      if (g.mode !== 'farm' || !g.item || g.farmPerMin <= 0) continue;
+      if (g.farmStopsAtTarget && (sim.stock[g.item] ?? 0) >= targetAmount(g, stackSize)) continue;
+      sim.stock[g.item] = (sim.stock[g.item] ?? 0) + g.farmPerMin / 1200;
+    }
     // Restock inventories being used
     for (const g of board.gauges) {
       if (g.mode === 'restock' && g.consumptionPerMin > 0) sim.local[g.id] = Math.max(0, (sim.local[g.id] ?? 0) - g.consumptionPerMin / 1200);
@@ -346,7 +360,7 @@ export function stepSim(board: Board, sim: SimState, ticks = 1, stackSize: (id: 
     // Gauges
     for (const g of board.gauges) {
       if (!g.item) continue;
-      if (g.mode === 'recipe' && g.inputs.length === 0) continue;
+      if (g.mode === 'farm' || (g.mode === 'recipe' && g.inputs.length === 0)) continue;
       const expiry = promiseTimeoutTicks(g.promiseTimeout);
       const expired = sim.promises.filter((pr) => pr.gauge === g.id && sim.tick - pr.createdAt >= expiry);
       if (expired.length) {

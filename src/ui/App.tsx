@@ -42,6 +42,7 @@ const STATE_FR: Record<GaugeStatus['state'], string> = {
   satisfied: 'stock atteint',
   promised: 'en attente de livraison',
   waiting: 'sous la cible',
+  farming: 'ferme en production',
   'missing-inputs': 'entrées insuffisantes',
   'no-address': 'adresse vide',
 };
@@ -440,6 +441,7 @@ function BoardView({
                 <span style={{ width: `${pct * 100}%` }} />
               </span>
               {g.mode === 'restock' && <span className="badge">réappro.</span>}
+              {g.mode === 'farm' && <span className="badge farm">ferme {fmt(g.farmPerMin)}/min</span>}
             </button>
           );
         })}
@@ -506,13 +508,16 @@ function GaugeEditor({
         <select value={g.mode} onChange={(e) => patch({ mode: e.target.value as Gauge['mode'] })}>
           <option value="recipe">Lien de stock / téléscripteur (recette)</option>
           <option value="restock">Empaqueteur (réapprovisionnement)</option>
+          <option value="farm">Lien de stock — alimenté par une ferme</option>
         </select>
       </label>
+      {g.mode !== 'farm' && (
       <label className="field">
         <span>Adresse {g.mode === 'recipe' ? 'de la recette (où envoyer les entrées)' : 'de livraison'}</span>
         <input value={g.address} list="addresses" placeholder="ex. presse, four*" onChange={(e) => patch({ address: e.target.value })} />
         {g.address && !dest && <span className="warn small">Aucune adresse de la liste ne correspond.</span>}
       </label>
+      )}
       <datalist id="addresses">
         {board.destinations.map((d) => (
           <option key={d.id} value={d.address} />
@@ -524,6 +529,7 @@ function GaugeEditor({
           <Num value={g.recipeOutput} min={1} max={9999} onChange={(recipeOutput) => patch({ recipeOutput })} />
         </label>
       )}
+      {g.mode !== 'farm' && (
       <label className="field">
         <span>Délai d'expiration des promesses</span>
         <select value={g.promiseTimeout} onChange={(e) => patch({ promiseTimeout: Number(e.target.value) })}>
@@ -534,8 +540,24 @@ function GaugeEditor({
           ))}
         </select>
       </label>
+      )}
 
-      {g.mode === 'recipe' ? (
+      {g.mode === 'farm' ? (
+        <>
+          <label className="field">
+            <span>Production de la ferme (objets/min)</span>
+            <Num value={g.farmPerMin} min={0} max={1000000} onChange={(farmPerMin) => patch({ farmPerMin })} />
+          </label>
+          <label className="inline small">
+            <input type="checkbox" checked={g.farmStopsAtTarget} onChange={() => patch({ farmStopsAtTarget: !g.farmStopsAtTarget })} /> La ferme s'arrête quand la cible est atteinte
+            (ex. coupée par redstone)
+          </label>
+          <p className="muted small">
+            La jauge ne commande rien : elle surveille le stock que la ferme remplit. Reliez-la en entrée d'autres jauges pour qu'elles
+            consomment cet objet.
+          </p>
+        </>
+      ) : g.mode === 'recipe' ? (
         <div className="field">
           <span>Entrées (jauges reliées, quantité par requête)</span>
           {g.inputs.length === 0 && <span className="muted small">Aucune : la jauge ne fait que surveiller son stock.</span>}
